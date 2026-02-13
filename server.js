@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 3000;
+const PORT = 3001;
 const ROOT_DIRECTORY = 'D:/Bloxorz - Block And Hole';
 const DEFAULT_ROOT_FILE = 'index.html';
 
@@ -68,3 +68,4 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => console.log(`Server: http://localhost:${PORT}`));
+
