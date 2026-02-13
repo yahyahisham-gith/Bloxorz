@@ -2,70 +2,64 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bloxorz - Block And Hole</title>
+    <title>Bloxorz - Local Server</title>
     <style>
-        body {
-            font-family: -apple-system, sans-serif;
-            margin: 0; padding: 0; overflow: hidden;
-            background-color: #1a1a1a; color: white;
-            display: flex; justify-content: center; align-items: center; height: 100vh;
-        }
-        #setup-ui { text-align: center; background: #333; padding: 30px; border-radius: 8px; }
-        #gameContainer { display: none; width: 100%; height: 100vh; }
-        iframe { width: 100%; height: 100%; border: none; }
-        
-        input { padding: 8px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #ccc; width: 200px; display: block; margin: 10px auto; }
-        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
-        .small-text { font-size: 0.8em; color: #bbb; margin-top: 10px; }
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #222; color: white; margin: 0; }
+        #game-ui { background: #333; padding: 20px; border-radius: 10px; text-align: center; }
+        iframe { display: none; width: 100%; height: 100vh; border: none; }
+        input, button { margin: 10px; padding: 10px; border-radius: 5px; border: none; }
+        button { cursor: pointer; background: #444; color: white; }
+        button:hover { background: #666; }
     </style>
 </head>
 <body>
 
-    <div id="setup-ui">
-        <h2>Bloxorz</h2>
-        <p>Enter your name to save progress:</p>
-        <input type="text" id="userName" placeholder="Your Name...">
-        
-        <button onclick="startGame('save')">Play Now</button>
-        <button onclick="generateRandomName()">Use Randomized Name</button>
+    <div id="game-ui">
+        <h1>Bloxorz</h1>
+        <input type="text" id="nameInput" placeholder="Enter Name">
         <br>
-        <button onclick="startGame('nosave')">Don't Save My Data</button>
-        
-        <div id="nameDisplay" class="small-text"></div>
+        <button onclick="handlePlay('chosen')">Play Now</button>
+        <button onclick="handlePlay('random')">Use Randomized Name</button>
+        <br>
+        <button onclick="startNoSave()">Don't Save My Data</button>
+        <p id="msg"></p>
     </div>
 
-    <div id="gameContainer">
-        <iframe id="gameFrame" src="https://classroom8.github.io/bloxorz/"></iframe>
-    </div>
+    <iframe id="gameFrame" src="https://classroom8.github.io/bloxorz/"></iframe>
 
     <script>
-        function generateRandomName() {
-            const names = ["Blocky", "Roller", "Square", "Hex", "Tiler", "Brick"];
-            const randomName = names[Math.floor(Math.random() * names.length)] + Math.floor(Math.random() * 100);
-            document.getElementById('userName').value = randomName;
-            document.getElementById('nameDisplay').innerText = "Your name is: " + randomName;
+        function setOneTimeCookie(name) {
+            document.cookie = `user_name_token=${encodeURI(name)}; path=/; max-age=60`;
         }
 
-        async function startGame(mode) {
-            const name = document.getElementById('userName').value;
+        async function handlePlay(type) {
+            let name = document.getElementById('nameInput').value;
+            let route = '/create-chosen-name';
 
-            if (mode === 'save' && !name) {
-                alert("Please enter a name or choose 'Don't Save'");
-                return;
+            if (type === 'random') {
+                const adjectives = ["Cool", "Fast", "Smart", "Brave"];
+                const nouns = ["Block", "Cube", "Edge", "Grid"];
+                name = adjectives[Math.floor(Math.random() * adjectives.length)] + nouns[Math.floor(Math.random() * nouns.length)] + Math.floor(Math.random() * 99);
+                route = '/create-randomized-name';
             }
 
-            if (mode === 'save') {
-                // Send data to our Node server
-                await fetch('/save-user', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: name })
-                });
-            }
+            if (!name) return alert("Enter a name!");
 
-            document.getElementById('setup-ui').style.display = 'none';
-            document.getElementById('gameContainer').style.display = 'block';
+            setOneTimeCookie(name);
+            
+            const response = await fetch(route);
+            if (response.ok) {
+                launchGame();
+            }
+        }
+
+        function launchGame() {
+            document.getElementById('game-ui').style.display = 'none';
+            document.getElementById('gameFrame').style.display = 'block';
+        }
+
+        function startNoSave() {
+            launchGame();
         }
     </script>
 </body>
