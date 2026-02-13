@@ -32,35 +32,39 @@
             document.cookie = `user_name_token=${encodeURI(name)}; path=/; max-age=60`;
         }
 
-        async function handlePlay(type) {
-            let name = document.getElementById('nameInput').value;
-            let route = '/create-chosen-name';
+async function handlePlay(type) {
+    let name = document.getElementById('nameInput').value;
+    let route = '/create-chosen-name';
 
-            if (type === 'random') {
-                const adjectives = ["Cool", "Fast", "Smart", "Brave"];
-                const nouns = ["Block", "Cube", "Edge", "Grid"];
-                name = adjectives[Math.floor(Math.random() * adjectives.length)] + nouns[Math.floor(Math.random() * nouns.length)] + Math.floor(Math.random() * 99);
-                route = '/create-randomized-name';
-            }
+    if (type === 'random') {
+        const adjectives = ["Cool", "Fast", "Smart", "Brave"];
+        const nouns = ["Block", "Cube", "Edge", "Grid"];
+        name = adjectives[Math.floor(Math.random() * adjectives.length)] + 
+               nouns[Math.floor(Math.random() * nouns.length)] + 
+               Math.floor(Math.random() * 99);
+        route = '/create-randomized-name';
+    }
 
-            if (!name) return alert("Enter a name!");
+    if (!name) return alert("Enter a name!");
 
-            setOneTimeCookie(name);
-            
-            const response = await fetch(route);
+    // Only try to save if we are running locally on your server
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        setOneTimeCookie(name);
+        try {
+            // Pointing to your specific port 3001
+            const response = await fetch(`http://localhost:3001${route}`);
             if (response.ok) {
-                launchGame();
+                console.log("Local folder created successfully.");
             }
+        } catch (err) {
+            console.log("Server not running locally, skipping save.");
         }
-
-        function launchGame() {
-            document.getElementById('game-ui').style.display = 'none';
-            document.getElementById('gameFrame').style.display = 'block';
-        }
-
-        function startNoSave() {
-            launchGame();
-        }
+    } else {
+        console.log("Running on Web (GitHub/Netlify). Folder creation skipped.");
+    }
+    
+    launchGame();
+}
     </script>
 </body>
 </html>
