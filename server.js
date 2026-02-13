@@ -7,6 +7,15 @@ const ROOT_DIRECTORY = 'D:/Bloxorz - Block And Hole';
 const DEFAULT_ROOT_FILE = 'index.html';
 
 const server = http.createServer((req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Cookie');
+
+if (req.method === 'OPTIONS') {
+    res.writeHead(204);
+    res.end();
+    return;
+}
     const url = req.url;
     const method = req.method;
 
@@ -68,4 +77,3 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => console.log(`Server: http://localhost:${PORT}`));
-
