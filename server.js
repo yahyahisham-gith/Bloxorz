@@ -2,60 +2,69 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-// --- CUSTOMIZATION SETTINGS ---
-const PORT = 3001;
+const PORT = 3000;
 const ROOT_DIRECTORY = 'D:/Bloxorz - Block And Hole';
-const DEFAULT_ROOT_FILE = 'index.html'; // Change this to your preferred start file
-// ------------------------------
+const DEFAULT_ROOT_FILE = 'index.html';
 
 const server = http.createServer((req, res) => {
-    // Determine the requested file path
-    let filePath = req.url === '/' 
-        ? path.join(ROOT_DIRECTORY, DEFAULT_ROOT_FILE) 
-        : path.join(ROOT_DIRECTORY, req.url);
+    const url = req.url;
+    const method = req.method;
 
-    // Get the file extension for MIME types
-    const extname = path.extname(filePath);
-    let contentType = 'text/html';
-
-    const mimeTypes = {
-        '.html': 'text/html',
-        '.js': 'text/javascript',
-        '.css': 'text/css',
-        '.json': 'application/json',
-        '.png': 'image/png',
-        '.jpg': 'image/jpg',
-        '.gif': 'image/gif',
-        '.wav': 'audio/wav',
-        '.mp4': 'video/mp4',
-        '.woff': 'application/font-woff',
-        '.ttf': 'application/font-ttf',
-        '.eot': 'application/vnd.ms-fontobject',
-        '.otf': 'application/font-otf',
-        '.svg': 'application/image/svg+xml'
+    // Helper to get cookies from request
+    const getCookie = (name) => {
+        const list = {};
+        const rc = req.headers.cookie;
+        rc && rc.split(';').forEach(cookie => {
+            const parts = cookie.split('=');
+            list[parts.shift().trim()] = decodeURI(parts.join('='));
+        });
+        return list[name];
     };
 
-    contentType = mimeTypes[extname] || 'application/octet-stream';
+    // ROUTE: Create Randomized or Chosen Name
+    if (url === '/create-randomized-name' || url === '/create-chosen-name') {
+        const userName = getCookie('user_name_token');
+        
+        if (!userName) {
+            res.writeHead(400);
+            return res.end('No name provided in cookie.');
+        }
 
-    // Read the file from disk
-    fs.readFile(filePath, (error, content) => {
-        if (error) {
-            if (error.code === 'ENOENT') {
-                res.writeHead(404);
-                res.end('Error: File Not Found');
-            } else {
-                res.writeHead(500);
-                res.end(`Server Error: ${error.code}`);
-            }
+        const cleanName = userName.replace(/[^a-z0-9]/gi, '_');
+        const userFolder = path.join(ROOT_DIRECTORY, cleanName);
+
+        // Create folder if it doesn't exist
+        if (!fs.existsSync(userFolder)) {
+            fs.mkdirSync(userFolder, { recursive: true });
+        }
+
+        // Save IP.save inside that folder
+        const ip = req.socket.remoteAddress;
+        const logContent = `Name: ${userName}\nIP: ${ip}\nDate: ${new Date().toISOString()}\n`;
+        fs.writeFileSync(path.join(userFolder, 'IP.save'), logContent);
+
+        // Clear the "one-time" cookie by setting it to expire
+        res.setHeader('Set-Cookie', 'user_name_token=; Max-Age=0; Path=/');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ status: 'success', folder: cleanName }));
+    }
+
+    // STATIC FILE SERVING
+    let filePath = url === '/' 
+        ? path.join(ROOT_DIRECTORY, DEFAULT_ROOT_FILE) 
+        : path.join(ROOT_DIRECTORY, url);
+
+    fs.readFile(filePath, (err, content) => {
+        if (err) {
+            res.writeHead(404);
+            res.end('Not Found');
         } else {
+            const ext = path.extname(filePath);
+            const contentType = ext === '.html' ? 'text/html' : 'text/plain';
             res.writeHead(200, { 'Content-Type': contentType });
-            res.end(content, 'utf-8');
+            res.end(content);
         }
     });
 });
 
-server.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}/`);
-    console.log(`Serving files from: ${ROOT_DIRECTORY}`);
-    console.log(`Homepage is set to: ${DEFAULT_ROOT_FILE}`);
-});
+server.listen(PORT, () => console.log(`Server: http://localhost:${PORT}`));
