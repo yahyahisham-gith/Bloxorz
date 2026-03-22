@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files>
+  <file name="Bloxorz.jpg" source="original">
+    <mtime>1607262944</mtime>
+    <size>158053</size>
+    <md5>4860db97ae40efc16ead2737f4dec63d</md5>
+    <crc32>9a442dcf</crc32>
+    <sha1>833d02efbdb0d0a2cae9731830375e64c5548dd1</sha1>
+    <format>Emulator Screenshot</format>
+    <rotation>0</rotation>
+  </file>
+  <file name="Bloxorz_thumb.jpg" source="derivative">
+    <format>JPEG Thumb</format>
+    <original>Bloxorz.jpg</original>
+    <mtime>1607263469</mtime>
+    <size>4033</size>
+    <md5>d7112fea191498e9baec0b7d87553678</md5>
+    <crc32>acceef0c</crc32>
+    <sha1>5fd78574422dd83c6c0ee9252d478a8dbc233b1e</sha1>
+  </file>
+  <file name="__ia_thumb.jpg" source="original">
+    <mtime>1633184845</mtime>
+    <size>7350</size>
+    <md5>3efc97027087ba63468ce58017f95df1</md5>
+    <crc32>8d4ab51d</crc32>
+    <sha1>993a403e997e31734f6ceb59864a9e908f68a66b</sha1>
+    <format>Item Tile</format>
+    <rotation>0</rotation>
+  </file>
+  <file name="bloxors.swf" source="original">
+    <mtime>1607262902</mtime>
+    <size>2207385</size>
+    <md5>088da4a48056402c5cb108c69070453c</md5>
+    <crc32>f1f222d7</crc32>
+    <sha1>2167e18a51705f1be0f1cac4c087a0c074f67eab</sha1>
+    <format>Shockwave Flash</format>
+    <length>76</length>
+    <height>22</height>
+    <width>133</width>
+  </file>
+  <file name="bloxors_archive.torrent" source="metadata">
+    <btih>96f18af78365182b5cc5f3c268bce5d854a933dd</btih>
+    <mtime>1749645810</mtime>
+    <size>2182</size>
+    <md5>ccae17142147f2f3468679dcc2fbba91</md5>
+    <crc32>da0b27e4</crc32>
+    <sha1>8bbc65b7d371d9ad27ec1f78ce41c709c599cc78</sha1>
+    <format>Archive BitTorrent</format>
+  </file>
+  <file name="bloxors_files.xml" source="original">
+    <format>Metadata</format>
+    <md5>e34865b0ab9ef7d2d779ff3cb7f22bfb</md5>
+    <summation>md5</summation>
+  </file>
+  <file name="bloxors_meta.sqlite" source="original">
+    <mtime>1607263067</mtime>
+    <size>14336</size>
+    <md5>15b5b8ee5fdbc96b755e6be392de306e</md5>
+    <crc32>cb233388</crc32>
+    <sha1>da2561a27ab48b6be88cf8ca32211d1aed654a3c</sha1>
+    <format>Metadata</format>
+  </file>
+  <file name="bloxors_meta.xml" source="original">
+    <mtime>1749645809</mtime>
+    <size>3005</size>
+    <md5>d413a7634fbda34ec7ef5b9ce52ff853</md5>
+    <crc32>0bbd2b06</crc32>
+    <sha1>b2415aeb3e958f00f926421561c680228fb9c6dc</sha1>
+    <format>Metadata</format>
+  </file>
+  <file name="bloxors_reviews.xml" source="original">
+    <mtime>1749645809</mtime>
+    <size>3829</size>
+    <md5>ed46e4020c36073e059ae8fa10997176</md5>
+    <crc32>5c28c591</crc32>
+    <sha1>bf373868860937a4cbda50eb55a80969a367a6e1</sha1>
+    <format>Metadata</format>
+  </file>
+</files>
